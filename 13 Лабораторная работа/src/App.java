@@ -8,8 +8,55 @@ public class App {
         }
     }
 
+    static void avearge(int[] n){
+        int result = 0;
+        int quantity = 0;
+        for (int i : n) {
+            result += i;
+            quantity++;
+        }
+
+        System.out.println("Среднее арифметическое массива: " + ((float)result/quantity));
+    }
+
+    static void area_and_perimeter(int x, int y){
+        System.out.println("Площадь треугольника равна: " + (float)((x*y)/2));
+        System.out.println("Периметр треугольника равен: " + (float)(Math.sqrt((Math.pow(x, 2)+Math.pow(y, 2)))+x+y));
+    }
+
+    static void multiple(int x, int y){
+        int min = x;
+        int multiples = 0;
+        if (min > y){
+            min = y;
+        }
+        for (int i = 1; i < min; ++i){
+            if ((x % i == 0) && (y % i == 0)){
+                multiples = i;
+            }
+        }
+        System.out.println("Наибольший общий множитель: " + multiples);
+        for (int i = 2; i < min; ++i){
+            if ((x % i == 0) && (y % i == 0)){
+                multiples = i;
+                break;
+            }
+        }
+        System.out.println("Наименьшее общее кратное: " + multiples);
+    }
+
+    static void cone(int r, int h){
+        double x;
+        x = (Math.pow(r, 2)/3)*(double)h*Math.PI;
+        System.out.println("Объем конуса равен: " + x);
+    }
+
     public static void main(String[] args) throws Exception {
         int[] x = {213, 32134, 434, 4234, 3546, 231};
         divisible(x);
+        avearge(x);
+        area_and_perimeter(5, 4);
+        multiple(144, 180);
+        cone(3, 4);
     }
 }
