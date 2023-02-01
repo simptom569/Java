@@ -38,7 +38,7 @@ public class Calculator extends JFrame {
         container = super.getContentPane();
         container.setLayout(new BorderLayout());
         
-        sign = '0';
+        sign = ' ';
         buttons = new JButton[4];
 
         panel1 = new JPanel();
@@ -86,6 +86,7 @@ public class Calculator extends JFrame {
         textfield.setPreferredSize(new Dimension(MAXIMIZED_HORIZ, 30));
         textfield.setEditable(false);
         textfield.setHorizontalAlignment(JTextField.RIGHT);
+        textfield.setText("0");
 
         panel1.setLayout(new GridLayout());
         panel1.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -147,32 +148,44 @@ public class Calculator extends JFrame {
             text = textfield.getText();
             String[] value;
             String result;
+            boolean if_sign = true;
+            System.out.println(sign);
             value = text.split("\\" + sign);
+            System.out.println(value);
 
             switch (sign) {
                 case '+':
+                    if_sign = true;
                     result = Integer.toString(Integer.parseInt(value[0]) + Integer.parseInt(value[1]));
                     break;
                 case '-':
+                    if_sign = true;
                     result = Integer.toString(Integer.parseInt(value[0]) - Integer.parseInt(value[1]));
                     break;
                 case '*':
+                    if_sign = true;
                     result = Integer.toString(Integer.parseInt(value[0]) * Integer.parseInt(value[1]));
                     break;
                 case '/':
+                    if_sign = true;
                     result = Integer.toString(Integer.parseInt(value[0]) / Integer.parseInt(value[1]));
                     break;
 
                 default:
+                    if_sign = false;
                     result = value[0];
                     break;
             }
 
             textfield.setText(result);
 
-            for (JButton but : buttons){
-                but.addActionListener(new SignEvent());
+            if (if_sign){
+                sign = ' ';
+                for (JButton but : buttons){
+                    but.addActionListener(new SignEvent());
+                }
             }
+            
         }
 
     }
@@ -182,6 +195,9 @@ public class Calculator extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             textfield.setText("");
+            for (JButton but : buttons){
+                but.addActionListener(new SignEvent());
+            }
         }
 
     }
