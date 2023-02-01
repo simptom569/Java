@@ -121,7 +121,12 @@ public class Calculator extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            textfield.setText(textfield.getText() + e.getActionCommand());
+            if (textfield.getText().equals("0")){
+                textfield.setText(e.getActionCommand());
+            }
+            else{
+                textfield.setText(textfield.getText() + e.getActionCommand());
+            }
         }
 
     }
@@ -194,7 +199,7 @@ public class Calculator extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            textfield.setText("");
+            textfield.setText("0");
             for (JButton but : buttons){
                 but.addActionListener(new SignEvent());
             }
