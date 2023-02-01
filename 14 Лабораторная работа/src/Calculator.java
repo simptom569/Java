@@ -27,6 +27,7 @@ public class Calculator extends JFrame {
     private JButton umnozit;
     private JButton delit;
     private JButton ravno;
+    private JButton delete;
 
     public Calculator(){
         super("Калькулятор");
@@ -58,6 +59,7 @@ public class Calculator extends JFrame {
         umnozit = new JButton("*");
         delit = new JButton("/");
         ravno = new JButton("=");
+        delete = new JButton("<");
 
         buttons[0] = plus;
         buttons[1] = minus;
@@ -79,6 +81,7 @@ public class Calculator extends JFrame {
         umnozit.addActionListener(new SignEvent());
         delit.addActionListener(new SignEvent());
         ravno.addActionListener(new EquallyEvent());
+        delete.addActionListener(new DeleteEvent());
 
         textfield.setPreferredSize(new Dimension(MAXIMIZED_HORIZ, 30));
         textfield.setEditable(false);
@@ -107,6 +110,7 @@ public class Calculator extends JFrame {
         panel2.add(button0);
         panel2.add(delit);
         panel2.add(ravno);
+        panel2.add(delete);
 
         container.add(panel1, BorderLayout.NORTH);
         container.add(panel2, BorderLayout.CENTER);
@@ -169,6 +173,15 @@ public class Calculator extends JFrame {
             for (JButton but : buttons){
                 but.addActionListener(new SignEvent());
             }
+        }
+
+    }
+
+    class DeleteEvent implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            textfield.setText("");
         }
 
     }
