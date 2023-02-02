@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Arrays;
 
 public class Calculator extends JFrame {
     
@@ -28,6 +29,7 @@ public class Calculator extends JFrame {
     private JButton delit;
     private JButton ravno;
     private JButton delete;
+    private JButton point;
 
     public Calculator(){
         super("Калькулятор");
@@ -60,6 +62,7 @@ public class Calculator extends JFrame {
         delit = new JButton("/");
         ravno = new JButton("=");
         delete = new JButton("<");
+        point = new JButton(",");
 
         buttons[0] = plus;
         buttons[1] = minus;
@@ -82,6 +85,7 @@ public class Calculator extends JFrame {
         delit.addActionListener(new SignEvent());
         ravno.addActionListener(new EquallyEvent());
         delete.addActionListener(new DeleteEvent());
+        point.addActionListener(new PointEvent());
 
         textfield.setPreferredSize(new Dimension(MAXIMIZED_HORIZ, 30));
         textfield.setEditable(false);
@@ -91,7 +95,7 @@ public class Calculator extends JFrame {
         panel1.setLayout(new GridLayout());
         panel1.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         
-        panel2.setLayout(new GridLayout(4, 4, 10, 10));
+        panel2.setLayout(new GridLayout(5, 4, 10, 10));
         panel2.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         panel1.add(textfield);
@@ -108,9 +112,10 @@ public class Calculator extends JFrame {
         panel2.add(button8);
         panel2.add(button9);
         panel2.add(umnozit);
+        panel2.add(point);
         panel2.add(button0);
-        panel2.add(delit);
         panel2.add(ravno);
+        panel2.add(delit);
         panel2.add(delete);
 
         container.add(panel1, BorderLayout.NORTH);
@@ -154,32 +159,38 @@ public class Calculator extends JFrame {
             String[] value;
             String result;
             boolean if_sign = true;
-            System.out.println(sign);
             value = text.split("\\" + sign);
-            System.out.println(value);
 
             switch (sign) {
                 case '+':
                     if_sign = true;
-                    result = Integer.toString(Integer.parseInt(value[0]) + Integer.parseInt(value[1]));
+                    result = Double.toString(Double.parseDouble(value[0]) + Double.parseDouble(value[1]));
                     break;
                 case '-':
+                    //Минус в начале сплититься тоже
                     if_sign = true;
-                    result = Integer.toString(Integer.parseInt(value[0]) - Integer.parseInt(value[1]));
+                    result = Double.toString(Double.parseDouble(value[0]) - Double.parseDouble(value[1]));
                     break;
                 case '*':
                     if_sign = true;
-                    result = Integer.toString(Integer.parseInt(value[0]) * Integer.parseInt(value[1]));
+                    result = Double.toString(Double.parseDouble(value[0]) * Double.parseDouble(value[1]));
                     break;
                 case '/':
                     if_sign = true;
-                    result = Integer.toString(Integer.parseInt(value[0]) / Integer.parseInt(value[1]));
+                    result = Double.toString(Double.parseDouble(value[0]) / Double.parseDouble(value[1]));
                     break;
 
                 default:
                     if_sign = false;
-                    result = value[0];
+                    result = Double.toString(Double.parseDouble(value[0]));
                     break;
+            }
+
+            
+            System.out.println(Arrays.toString(result.split("\\.")));
+            System.out.println(result.split("\\.")[1]);
+            if(result.split("\\.")[1].equals("0")){
+                result = result.substring(0, result.length()-2);
             }
 
             textfield.setText(result);
@@ -200,8 +211,24 @@ public class Calculator extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             textfield.setText("0");
-            for (JButton but : buttons){
-                but.addActionListener(new SignEvent());
+            if (sign != ' '){
+                for (JButton but : buttons){
+                    but.addActionListener(new SignEvent());
+                }
+            }
+        }
+
+    }
+
+    class PointEvent implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String[] text = textfield.getText().split("(?<=[-+*/])|(?=[-+*/])");
+            System.out.println(Arrays.toString(text));
+            System.out.println(text[text.length-1]);
+            if (!text[text.length-1].equals("*") && !text[text.length-1].equals("-") && !text[text.length-1].equals("+") && !text[text.length-1].equals("/") && text[text.length-1].indexOf(".") == -1){
+                textfield.setText(textfield.getText() + ".");
             }
         }
 
