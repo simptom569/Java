@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Arrays;
 
 public class Calculator extends JFrame {
     
@@ -30,6 +29,7 @@ public class Calculator extends JFrame {
     private JButton ravno;
     private JButton delete;
     private JButton point;
+    private JButton clean;
 
     public Calculator(){
         super("Калькулятор");
@@ -61,8 +61,9 @@ public class Calculator extends JFrame {
         umnozit = new JButton("*");
         delit = new JButton("/");
         ravno = new JButton("=");
-        delete = new JButton("<");
+        clean = new JButton("c");
         point = new JButton(",");
+        delete = new JButton("<");
 
         buttons[0] = plus;
         buttons[1] = minus;
@@ -84,8 +85,9 @@ public class Calculator extends JFrame {
         umnozit.addActionListener(new SignEvent());
         delit.addActionListener(new SignEvent());
         ravno.addActionListener(new EquallyEvent());
-        delete.addActionListener(new DeleteEvent());
+        clean.addActionListener(new CleanEvent());
         point.addActionListener(new PointEvent());
+        delete.addActionListener(new DeleteEvent());
 
         textfield.setPreferredSize(new Dimension(MAXIMIZED_HORIZ, 30));
         textfield.setEditable(false);
@@ -116,6 +118,7 @@ public class Calculator extends JFrame {
         panel2.add(button0);
         panel2.add(ravno);
         panel2.add(delit);
+        panel2.add(clean);
         panel2.add(delete);
 
         container.add(panel1, BorderLayout.NORTH);
@@ -171,33 +174,38 @@ public class Calculator extends JFrame {
 
             value = text.split("\\" + sign);
 
-            switch (sign) {
-                case '+':
-                    if_sign = true;
-                    result = Double.toString(Double.parseDouble(value[0]) + Double.parseDouble(value[1]));
-                    break;
-                case '-':
-                    if_sign = true;
-                    if (if_minus){
-                        result = Double.toString(Double.parseDouble("-" + value[0]) - Double.parseDouble(value[1]));
-                    }
-                    else{
-                        result = Double.toString(Double.parseDouble(value[0]) - Double.parseDouble(value[1]));
-                    }
-                    break;
-                case '*':
-                    if_sign = true;
-                    result = Double.toString(Double.parseDouble(value[0]) * Double.parseDouble(value[1]));
-                    break;
-                case '/':
-                    if_sign = true;
-                    result = Double.toString(Double.parseDouble(value[0]) / Double.parseDouble(value[1]));
-                    break;
-
-                default:
-                    if_sign = false;
-                    result = Double.toString(Double.parseDouble(value[0]));
-                    break;
+            if (!text.endsWith("-") && !text.endsWith("+") && !text.endsWith("/") && !text.endsWith("*")){
+                switch (sign) {
+                    case '+':
+                        if_sign = true;
+                        result = Double.toString(Double.parseDouble(value[0]) + Double.parseDouble(value[1]));
+                        break;
+                    case '-':
+                        if_sign = true;
+                        if (if_minus){
+                            result = Double.toString(Double.parseDouble("-" + value[0]) - Double.parseDouble(value[1]));
+                        }
+                        else{
+                            result = Double.toString(Double.parseDouble(value[0]) - Double.parseDouble(value[1]));
+                        }
+                        break;
+                    case '*':
+                        if_sign = true;
+                        result = Double.toString(Double.parseDouble(value[0]) * Double.parseDouble(value[1]));
+                        break;
+                    case '/':
+                        if_sign = true;
+                        result = Double.toString(Double.parseDouble(value[0]) / Double.parseDouble(value[1]));
+                        break;
+    
+                    default:
+                        if_sign = false;
+                        result = Double.toString(Double.parseDouble(value[0]));
+                        break;
+                }
+            }
+            else{
+                result = Double.toString(Double.parseDouble(value[0]));
             }
 
             if(result.split("\\.")[1].equals("0")){
@@ -217,12 +225,13 @@ public class Calculator extends JFrame {
 
     }
 
-    class DeleteEvent implements ActionListener{
+    class CleanEvent implements ActionListener{
 
         @Override
         public void actionPerformed(ActionEvent e) {
             textfield.setText("0");
             if (sign != ' '){
+                sign = ' ';
                 for (JButton but : buttons){
                     but.addActionListener(new SignEvent());
                 }
@@ -238,6 +247,27 @@ public class Calculator extends JFrame {
             String[] text = textfield.getText().split("(?<=[-+*/])|(?=[-+*/])");
             if (!text[text.length-1].equals("*") && !text[text.length-1].equals("-") && !text[text.length-1].equals("+") && !text[text.length-1].equals("/") && text[text.length-1].indexOf(".") == -1){
                 textfield.setText(textfield.getText() + ".");
+            }
+        }
+
+    }
+
+    class DeleteEvent implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            if (sign != ' '){
+                sign = ' ';
+                for (JButton but : buttons){
+                    but.addActionListener(new SignEvent());
+                }
+            }
+            if (textfield.getText().length() == 1){
+                textfield.setText("0");
+            }
+            else{
+                textfield.setText(textfield.getText().substring(0, textfield.getText().length()-1));
             }
         }
 
