@@ -158,7 +158,17 @@ public class Calculator extends JFrame {
             text = textfield.getText();
             String[] value;
             String result;
+            boolean if_minus;
             boolean if_sign = true;
+
+            if (text.startsWith("-") && sign == '-'){
+                if_minus = true;
+                text = text.substring(1, text.length());
+            }
+            else{
+                if_minus = false;
+            }
+
             value = text.split("\\" + sign);
 
             switch (sign) {
@@ -167,9 +177,13 @@ public class Calculator extends JFrame {
                     result = Double.toString(Double.parseDouble(value[0]) + Double.parseDouble(value[1]));
                     break;
                 case '-':
-                    //Минус в начале сплититься тоже
                     if_sign = true;
-                    result = Double.toString(Double.parseDouble(value[0]) - Double.parseDouble(value[1]));
+                    if (if_minus){
+                        result = Double.toString(Double.parseDouble("-" + value[0]) - Double.parseDouble(value[1]));
+                    }
+                    else{
+                        result = Double.toString(Double.parseDouble(value[0]) - Double.parseDouble(value[1]));
+                    }
                     break;
                 case '*':
                     if_sign = true;
@@ -186,9 +200,6 @@ public class Calculator extends JFrame {
                     break;
             }
 
-            
-            System.out.println(Arrays.toString(result.split("\\.")));
-            System.out.println(result.split("\\.")[1]);
             if(result.split("\\.")[1].equals("0")){
                 result = result.substring(0, result.length()-2);
             }
