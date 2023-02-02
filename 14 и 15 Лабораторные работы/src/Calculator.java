@@ -236,8 +236,6 @@ public class Calculator extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             String[] text = textfield.getText().split("(?<=[-+*/])|(?=[-+*/])");
-            System.out.println(Arrays.toString(text));
-            System.out.println(text[text.length-1]);
             if (!text[text.length-1].equals("*") && !text[text.length-1].equals("-") && !text[text.length-1].equals("+") && !text[text.length-1].equals("/") && text[text.length-1].indexOf(".") == -1){
                 textfield.setText(textfield.getText() + ".");
             }
