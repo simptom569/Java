@@ -17,6 +17,14 @@ public class App {
         String compare = function.compare(name1, name2);
         String season = function.seasons(mounth);
 
+        System.out.print(a + " ");
+        System.out.print(b + " ");
+        System.out.print(c + " ");
+        System.out.print(d + " ");
+        System.out.println(e);
+        System.out.println(name1);
+        System.out.println(name2);
+        System.out.println(mounth);
         System.out.println("Минимально число среди четырех чисел: " + min);
         System.out.println("Количетсво максимальных чисел среди четырех: " + kol_max_chisl);
         System.out.println("Минимальное среди пяти чисел: " + min_five);

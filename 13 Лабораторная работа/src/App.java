@@ -53,10 +53,17 @@ public class App {
 
     public static void main(String[] args) throws Exception {
         int[] x = {213, 32134, 434, 4234, 3546, 231};
+        for (int i : x) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
         divisible(x);
         avearge(x);
+        System.out.println("Значения: 5 и 4");
         area_and_perimeter(5, 4);
+        System.out.println("Значения: 144 и 180");
         multiple(144, 180);
+        System.out.println("Значения: 3 и 4");
         cone(3, 4);
     }
 }

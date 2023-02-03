@@ -53,14 +53,34 @@ public class App {
         }
     }
 
+    static void search(String text, char t){
+        int kol = 0;
+        for (int i = 0; i < text.length(); ++i){
+            if (text.charAt(i) == t){
+                kol++;
+            }
+            if (kol == 2){
+                System.out.println("Символ встречается хотя бы два раза");
+                break;
+            }
+        }
+        if (kol < 2){
+            System.out.println("Символ не встречается хотя бы два раза");
+        }
+    }
+
     public static void main(String[] args) throws Exception {
         nechet_for();
-        System.out.println("\n\nфакториал числа циклом for: " + factorial_for(5));
+        System.out.println("\n\n5");
+        System.out.println("факториал числа циклом for: " + factorial_for(5));
         nechet_while();
-        System.out.println("\n\nфакториал числа циклом while: " + factorial_while(5));
-        System.out.println("\n\nВозведение в степень: " + pow(6, 3));
+        System.out.println("\n\n5");
+        System.out.println("факториал числа циклом while: " + factorial_while(5));
+        System.out.println("\n\n6 в 3");
+        System.out.println("Возведение в степень: " + pow(6, 3));
         System.out.println("\n\nПоследовательность чисел: ");
         order(10);
-        //6 Задание. Не понятно насчет того, что какой символ должен встречаться два раза в строке
+        System.out.println("\n\nПипевень е");
+        search("Пипевень", 'е');
     }
 }

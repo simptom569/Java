@@ -91,6 +91,11 @@ public class App {
     public static void main(String[] args) throws Exception {
         int[] array = {12, 43, 1331, 4, 6, 2, 9, 77, 9};
 
+        for (int i : array) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+
         create_array();
         mins_array(array);
         max_array(array);
