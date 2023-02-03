@@ -79,24 +79,64 @@ public class Calculator extends JFrame {
 
         button1.addActionListener(new ButtonEvent());
         button1.setFocusPainted(false);
+        button1.setBackground(Color.BLACK);
+        button1.setForeground(Color.WHITE);
+        button1.setBorder(null);
+
         button2.addActionListener(new ButtonEvent());
         button2.setFocusPainted(false);
+        button2.setBackground(Color.BLACK);
+        button2.setForeground(Color.WHITE);
+        button2.setBorder(null);
+
         button3.addActionListener(new ButtonEvent());
         button3.setFocusPainted(false);
+        button3.setBackground(Color.BLACK);
+        button3.setForeground(Color.WHITE);
+        button3.setBorder(null);
+
         button4.addActionListener(new ButtonEvent());
         button4.setFocusPainted(false);
+        button4.setBackground(Color.BLACK);
+        button4.setForeground(Color.WHITE);
+        button4.setBorder(null);
+
         button5.addActionListener(new ButtonEvent());
         button5.setFocusPainted(false);
+        button5.setBackground(Color.BLACK);
+        button5.setForeground(Color.WHITE);
+        button5.setBorder(null);
+
         button6.addActionListener(new ButtonEvent());
         button6.setFocusPainted(false);
+        button6.setBackground(Color.BLACK);
+        button6.setForeground(Color.WHITE);
+        button6.setBorder(null);
+
         button7.addActionListener(new ButtonEvent());
         button7.setFocusPainted(false);
+        button7.setBackground(Color.BLACK);
+        button7.setForeground(Color.WHITE);
+        button7.setBorder(null);
+
         button8.addActionListener(new ButtonEvent());
         button8.setFocusPainted(false);
+        button8.setBackground(Color.BLACK);
+        button8.setForeground(Color.WHITE);
+        button8.setBorder(null);
+
         button9.addActionListener(new ButtonEvent());
         button9.setFocusPainted(false);
+        button9.setBackground(Color.BLACK);
+        button9.setForeground(Color.WHITE);
+        button9.setBorder(null);
+
         button0.addActionListener(new ButtonEvent());
         button0.setFocusPainted(false);
+        button0.setBackground(Color.BLACK);
+        button0.setForeground(Color.WHITE);
+        button0.setBorder(null);
+
         plus.addActionListener(new SignEvent());
         plus.setFocusPainted(false);
         minus.addActionListener(new SignEvent());
@@ -113,9 +153,9 @@ public class Calculator extends JFrame {
         point.setFocusPainted(false);
         delete.addActionListener(new DeleteEvent());
         delete.setFocusPainted(false);
-        download.addActionListener(new Download());
+        download.addActionListener(new DownloadEvent());
         download.setFocusPainted(false);
-        onload.addActionListener(new Download());
+        onload.addActionListener(new DownloadEvent());
         onload.setFocusPainted(false);
 
         textfield.setPreferredSize(new Dimension(MAXIMIZED_HORIZ, 30));
@@ -347,7 +387,7 @@ public class Calculator extends JFrame {
 
     }
 
-    class Download implements ActionListener{
+    class DownloadEvent implements ActionListener{
 
         @Override
         public void actionPerformed(ActionEvent e) {
