@@ -1,3 +1,4 @@
+// Фон кнопок, шрифт, цвет, границ
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -7,6 +8,7 @@ public class Calculator extends JFrame {
     private char sign;
     private String text;
     private JButton[] buttons;
+    private String save_text;
 
     private Container container;
     private JPanel panel1;
@@ -30,6 +32,8 @@ public class Calculator extends JFrame {
     private JButton delete;
     private JButton point;
     private JButton clean;
+    private JButton download;
+    private JButton onload;
 
     public Calculator(){
         super("Калькулятор");
@@ -42,6 +46,7 @@ public class Calculator extends JFrame {
         
         sign = ' ';
         buttons = new JButton[4];
+        save_text = "0";
 
         panel1 = new JPanel();
         panel2 = new JPanel();
@@ -64,6 +69,8 @@ public class Calculator extends JFrame {
         clean = new JButton("c");
         point = new JButton(",");
         delete = new JButton("<");
+        download = new JButton("s");
+        onload = new JButton("g");
 
         buttons[0] = plus;
         buttons[1] = minus;
@@ -106,6 +113,10 @@ public class Calculator extends JFrame {
         point.setFocusPainted(false);
         delete.addActionListener(new DeleteEvent());
         delete.setFocusPainted(false);
+        download.addActionListener(new Download());
+        download.setFocusPainted(false);
+        onload.addActionListener(new Download());
+        onload.setFocusPainted(false);
 
         textfield.setPreferredSize(new Dimension(MAXIMIZED_HORIZ, 30));
         textfield.setEditable(false);
@@ -138,6 +149,8 @@ public class Calculator extends JFrame {
         panel2.add(delit);
         panel2.add(clean);
         panel2.add(delete);
+        panel2.add(download);
+        panel2.add(onload);
 
         container.add(panel1, BorderLayout.NORTH);
         container.add(panel2, BorderLayout.CENTER);
@@ -147,11 +160,16 @@ public class Calculator extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (textfield.getText().equals("0")){
+            if (textfield.getText().equals("На ноль делить нельзя")){
                 textfield.setText(e.getActionCommand());
             }
             else{
-                textfield.setText(textfield.getText() + e.getActionCommand());
+                if (textfield.getText().equals("0")){
+                    textfield.setText(e.getActionCommand());
+                }
+                else{
+                    textfield.setText(textfield.getText() + e.getActionCommand());
+                }
             }
         }
 
@@ -161,13 +179,16 @@ public class Calculator extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            sign = e.getActionCommand().charAt(0);
-            for (JButton but : buttons){
-                for (ActionListener al : but.getActionListeners()){
-                    but.removeActionListener(al);
+            if (!textfield.getText().equals("На ноль делить нельзя")){
+                sign = e.getActionCommand().charAt(0);
+                for (JButton but : buttons){
+                    for (ActionListener al : but.getActionListeners()){
+                        but.removeActionListener(al);
+                    }
                 }
+                textfield.setText(textfield.getText() + e.getActionCommand());
             }
-            textfield.setText(textfield.getText() + e.getActionCommand());
+            
         }
 
     }
@@ -181,6 +202,12 @@ public class Calculator extends JFrame {
             String result;
             boolean if_minus;
             boolean if_sign = true;
+            boolean if_nol = false;
+            boolean if_text = false;
+
+            if (text.equals("На ноль делить нельзя")){
+                if_text = true;
+            }
 
             if (text.startsWith("-") && sign == '-'){
                 if_minus = true;
@@ -192,53 +219,75 @@ public class Calculator extends JFrame {
 
             value = text.split("\\" + sign);
 
-            if (!text.endsWith("-") && !text.endsWith("+") && !text.endsWith("/") && !text.endsWith("*")){
-                switch (sign) {
-                    case '+':
-                        if_sign = true;
-                        result = Double.toString(Double.parseDouble(value[0]) + Double.parseDouble(value[1]));
-                        break;
-                    case '-':
-                        if_sign = true;
-                        if (if_minus){
-                            result = Double.toString(Double.parseDouble("-" + value[0]) - Double.parseDouble(value[1]));
-                        }
-                        else{
-                            result = Double.toString(Double.parseDouble(value[0]) - Double.parseDouble(value[1]));
-                        }
-                        break;
-                    case '*':
-                        if_sign = true;
-                        result = Double.toString(Double.parseDouble(value[0]) * Double.parseDouble(value[1]));
-                        break;
-                    case '/':
-                        if_sign = true;
-                        result = Double.toString(Double.parseDouble(value[0]) / Double.parseDouble(value[1]));
-                        break;
-    
-                    default:
-                        if_sign = false;
-                        result = Double.toString(Double.parseDouble(value[0]));
-                        break;
+            if (if_text != true){
+                if (!text.endsWith("-") && !text.endsWith("+") && !text.endsWith("/") && !text.endsWith("*")){
+                    switch (sign) {
+                        case '+':
+                            if_sign = true;
+                            result = Double.toString(Double.parseDouble(value[0]) + Double.parseDouble(value[1]));
+                            System.out.println(value[0] + "+" + value[1] + "=" + result);
+                            break;
+                        case '-':
+                            if_sign = true;
+                            if (if_minus){
+                                result = Double.toString(Double.parseDouble("-" + value[0]) - Double.parseDouble(value[1]));
+                                System.out.println("-" + value[0] + "-" + value[1] + "=" + result);
+                            }
+                            else{
+                                result = Double.toString(Double.parseDouble(value[0]) - Double.parseDouble(value[1]));
+                                System.out.println(value[0] + "-" + value[1] + "=" + result);
+                            }
+                            break;
+                        case '*':
+                            if_sign = true;
+                            result = Double.toString(Double.parseDouble(value[0]) * Double.parseDouble(value[1]));
+                            System.out.println(value[0] + "*" + value[1] + "=" + result);
+                            break;
+                        case '/':
+                            if (value[1].equals("0")){
+                                result = "На ноль делить нельзя";
+                                if_sign = true;
+                                if_nol = true;
+                                break;
+                            }
+                            else{
+                                if_sign = true;
+                                result = Double.toString(Double.parseDouble(value[0]) / Double.parseDouble(value[1]));
+                                System.out.println(value[0] + "/" + value[1] + "=" + result);
+                                break;
+                            }
+        
+                        default:
+                            if_sign = false;
+                            result = Double.toString(Double.parseDouble(value[0]));
+                            break;
+                    }
+                }
+                else{
+                    result = Double.toString(Double.parseDouble(value[0]));
+                }
+                
+                if (!if_nol){
+                    if(result.split("\\.")[1].equals("0")){
+                        result = result.substring(0, result.length()-2);
+                    }
                 }
             }
             else{
-                result = Double.toString(Double.parseDouble(value[0]));
-            }
-
-            if(result.split("\\.")[1].equals("0")){
-                result = result.substring(0, result.length()-2);
+                result = "0";
             }
 
             textfield.setText(result);
 
-            if (if_sign){
-                sign = ' ';
-                for (JButton but : buttons){
-                    but.addActionListener(new SignEvent());
+            if (if_text != true){
+                if (if_sign){
+                    sign = ' ';
+                    for (JButton but : buttons){
+                        but.addActionListener(new SignEvent());
+                    }
                 }
             }
-            
+
         }
 
     }
@@ -254,6 +303,7 @@ public class Calculator extends JFrame {
                     but.addActionListener(new SignEvent());
                 }
             }
+
         }
 
     }
@@ -262,10 +312,13 @@ public class Calculator extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            String[] text = textfield.getText().split("(?<=[-+*/])|(?=[-+*/])");
-            if (!text[text.length-1].equals("*") && !text[text.length-1].equals("-") && !text[text.length-1].equals("+") && !text[text.length-1].equals("/") && text[text.length-1].indexOf(".") == -1){
-                textfield.setText(textfield.getText() + ".");
+            if (!textfield.getText().equals("На ноль делить нельзя")){
+                String[] text = textfield.getText().split("(?<=[-+*/])|(?=[-+*/])");
+                if (!text[text.length-1].equals("*") && !text[text.length-1].equals("-") && !text[text.length-1].equals("+") && !text[text.length-1].equals("/") && text[text.length-1].indexOf(".") == -1){
+                    textfield.setText(textfield.getText() + ".");
+                }
             }
+
         }
 
     }
@@ -275,17 +328,42 @@ public class Calculator extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            if (sign != ' '){
-                sign = ' ';
-                for (JButton but : buttons){
-                    but.addActionListener(new SignEvent());
+            if (!textfield.getText().equals("На ноль делить нельзя")){
+                if (sign != ' '){
+                    sign = ' ';
+                    for (JButton but : buttons){
+                        but.addActionListener(new SignEvent());
+                    }
+                }
+                if (textfield.getText().length() == 1){
+                    textfield.setText("0");
+                }
+                else{
+                    textfield.setText(textfield.getText().substring(0, textfield.getText().length()-1));
                 }
             }
-            if (textfield.getText().length() == 1){
-                textfield.setText("0");
-            }
-            else{
-                textfield.setText(textfield.getText().substring(0, textfield.getText().length()-1));
+
+        }
+
+    }
+
+    class Download implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            
+            if (!textfield.getText().equals("На ноль делить нельзя")){
+                if (e.getActionCommand().equals("s")){
+                    save_text = textfield.getText();
+                }
+                if (e.getActionCommand().equals("g")){
+                    if (textfield.getText().equals("0")){
+                    textfield.setText(save_text);
+                    }
+                else{
+                    textfield.setText(textfield.getText() + save_text);
+                }
+                }
             }
         }
 
