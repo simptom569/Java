@@ -1,4 +1,3 @@
-// Фон кнопок, шрифт, цвет, границ
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
