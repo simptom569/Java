@@ -1,6 +1,17 @@
 import java.awt.*;
 import javax.swing.*;
-// import javax.swing.event.*;
+import java.awt.event.*;
+
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
+import java.util.Scanner;
+
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 public class TextEditor extends JFrame{
     
@@ -36,12 +47,26 @@ public class TextEditor extends JFrame{
 
     private JMenu admin;
 
-    private JMenu exit;
+    private JMenuItem exit;
+
+    private JTextArea editor;
+    private JScrollPane scroll;
+
+    private JFileChooser dialogRead;
+    private FileDialog dialogWrite;
 
     public TextEditor(){
+
         super("Text Editor");
         super.setBounds(200, 200, 700, 400);
         super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        try {
+            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+                | UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
 
         container = super.getContentPane();
         container.setLayout(new BorderLayout());
@@ -77,7 +102,23 @@ public class TextEditor extends JFrame{
 
         admin = new JMenu("Администрирование");
 
-        exit = new JMenu("Выход");
+        exit = new JMenuItem("Выход");
+
+        dialogRead = new JFileChooser();
+        dialogWrite = new FileDialog(this, "Save File", FileDialog.SAVE);
+        dialogWrite.setDirectory("C://");
+
+        editor = new JTextArea();
+        scroll = new JScrollPane();
+        editor.setLineWrap(true);
+        editor.setWrapStyleWord(true);
+        editor.setEditable(false);
+        scroll.setViewportView(editor);
+        scroll.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
+
+        readTXTFile.addActionListener(new OpenTxtAction());
+        readWordFile.addActionListener(new OpenWordAction());
+        exit.addActionListener(new ExitAction());
 
         editTXT.add(writeTXTFile);
         editTXT.add(addTXTFile);
@@ -107,8 +148,93 @@ public class TextEditor extends JFrame{
         menu.add(viewReports);
         menu.add(admin);
         menu.add(exit);
+
         super.setDefaultLookAndFeelDecorated(true);
         super.setJMenuBar(menu);
+
+        container.add(scroll);
+
+    }
+
+    private class ExitAction implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            
+            System.exit(0);
+            
+        }
+        
+    }
+
+    private class OpenTxtAction implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e){
+            
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Text File(.txt)", "txt");
+            dialogRead.resetChoosableFileFilters();
+            dialogRead.setFileFilter(filter);
+            dialogRead.showOpenDialog(container);
+
+            String text = "";
+            String wrap = "";
+
+            try {
+                File file = new File(dialogRead.getSelectedFile().getPath());
+                Scanner sc = new Scanner(file);
+                while (sc.hasNextLine()){
+                    text += wrap + sc.nextLine();
+                    wrap = "\n";
+                }
+                sc.close();
+            } catch (FileNotFoundException | NullPointerException e1) {
+                e1.printStackTrace();
+            }
+
+            editor.setText(text);
+
+        }
+
+    }
+
+    private class OpenWordAction implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e){
+            
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Microsoft Word(.doc, .docx)", "docx", "doc");
+            dialogRead.resetChoosableFileFilters();
+            dialogRead.setFileFilter(filter);
+            dialogRead.showOpenDialog(container);
+
+            String text = "";
+            String wrap = "";
+
+            try {
+                File file = new File(dialogRead.getSelectedFile().getPath());
+                FileInputStream fis = new FileInputStream(file.getAbsoluteFile());
+
+                XWPFDocument document = new XWPFDocument(fis);
+                List<XWPFParagraph> paragraphs = document.getParagraphs();
+
+                document.close();
+
+                for (XWPFParagraph para : paragraphs){
+                    text += wrap + para.getText();
+                    wrap = "\n";
+                }
+
+                fis.close();
+
+            } catch (NullPointerException | IOException e1) {
+                e1.printStackTrace();
+            }
+
+            editor.setText(text);
+
+        }
+
     }
 
 }
