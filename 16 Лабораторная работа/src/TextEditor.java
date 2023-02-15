@@ -1,12 +1,13 @@
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import java.io.*;
 
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+// import java.io.File;
+// import java.io.FileInputStream;
+// import java.io.FileNotFoundException;
+// import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -53,7 +54,7 @@ public class TextEditor extends JFrame{
     private JScrollPane scroll;
 
     private JFileChooser dialogRead;
-    private FileDialog dialogWrite;
+    private JFileChooser dialogWrite;
 
     public TextEditor(){
 
@@ -63,8 +64,7 @@ public class TextEditor extends JFrame{
 
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-                | UnsupportedLookAndFeelException e) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
 
@@ -105,10 +105,11 @@ public class TextEditor extends JFrame{
         exit = new JMenuItem("Выход");
 
         dialogRead = new JFileChooser();
-        dialogWrite = new FileDialog(this, "Save File", FileDialog.SAVE);
-        dialogWrite.setDirectory("C://");
+        dialogWrite = new JFileChooser();
 
         editor = new JTextArea();
+        editor.setFont(editor.getFont().deriveFont(12f));
+
         scroll = new JScrollPane();
         editor.setLineWrap(true);
         editor.setWrapStyleWord(true);
@@ -118,6 +119,12 @@ public class TextEditor extends JFrame{
 
         readTXTFile.addActionListener(new OpenTxtAction());
         readWordFile.addActionListener(new OpenWordAction());
+        readExcelFile.addActionListener(new OpenExcelAction());
+        readCSVFile.addActionListener(new OpenCSVAction());
+        createTXT.addActionListener(new CreateTxtAction());
+        createWord.addActionListener(new CreateWordAction());
+        createExcel.addActionListener(new CreateExcelAction());
+        createCSV.addActionListener(new CreateCSVAction());
         exit.addActionListener(new ExitAction());
 
         editTXT.add(writeTXTFile);
@@ -232,6 +239,128 @@ public class TextEditor extends JFrame{
             }
 
             editor.setText(text);
+
+        }
+
+    }
+
+    private class OpenExcelAction implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            editor.setText("Данная функция находиться в разработке");
+
+        }
+        
+    }
+
+    private class OpenCSVAction implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            editor.setText("Данная функция находиться в разработке");
+
+        }
+        
+    }
+
+    private class CreateTxtAction implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Text File(.txt)", "txt");
+            dialogWrite.resetChoosableFileFilters();
+            dialogWrite.setFileFilter(filter);
+            dialogWrite.setSelectedFile(new File("FileName.txt"));
+            dialogWrite.showSaveDialog(container);
+
+            File file = new File(dialogWrite.getSelectedFile().getPath());
+            try {
+                if (!dialogWrite.getSelectedFile().getPath().endsWith(".txt")){
+                    file = new File(dialogWrite.getSelectedFile().getPath() + ".txt");
+                }
+                file.createNewFile();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+
+        }
+
+    }
+
+    private class CreateWordAction implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Microsoft Word(.doc, .docx)", "docx", "doc");
+            dialogWrite.resetChoosableFileFilters();
+            dialogWrite.setFileFilter(filter);
+            dialogWrite.setSelectedFile(new File("FileName.docx"));
+            dialogWrite.showSaveDialog(container);
+
+            File file = new File(dialogWrite.getSelectedFile().getPath());
+            try {
+                if (!dialogWrite.getSelectedFile().getPath().endsWith(".doc") && !dialogWrite.getSelectedFile().getPath().endsWith(".docx")){
+                    file = new File(dialogWrite.getSelectedFile().getPath() + ".docx");
+                }
+                file.createNewFile();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+
+        }
+
+    }
+
+    private class CreateExcelAction implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Microsoft Excel(.xlsx)", "xlsx");
+            dialogWrite.resetChoosableFileFilters();
+            dialogWrite.setFileFilter(filter);
+            dialogWrite.setSelectedFile(new File("FileName.xlsx"));
+            dialogWrite.showSaveDialog(container);
+
+            File file = new File(dialogWrite.getSelectedFile().getPath());
+            try {
+                if (!dialogWrite.getSelectedFile().getPath().endsWith(".xlsx")){
+                    file = new File(dialogWrite.getSelectedFile().getPath() + ".xlsx");
+                }
+                file.createNewFile();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+
+        }
+
+    }
+
+    private class CreateCSVAction implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Text File(.csv)", "csv");
+            dialogWrite.resetChoosableFileFilters();
+            dialogWrite.setFileFilter(filter);
+            dialogWrite.setSelectedFile(new File("FileName.csv"));
+            dialogWrite.showSaveDialog(container);
+
+            File file = new File(dialogWrite.getSelectedFile().getPath());
+            try {
+                if (!dialogWrite.getSelectedFile().getPath().endsWith(".csv")){
+                    file = new File(dialogWrite.getSelectedFile().getPath() + ".csv");
+                }
+                file.createNewFile();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
 
         }
 
