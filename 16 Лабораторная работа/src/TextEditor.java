@@ -13,6 +13,7 @@ import java.util.Scanner;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 public class TextEditor extends JFrame{
     
@@ -113,7 +114,7 @@ public class TextEditor extends JFrame{
         scroll = new JScrollPane();
         editor.setLineWrap(true);
         editor.setWrapStyleWord(true);
-        editor.setEditable(false);
+        // editor.setEditable(false);
         scroll.setViewportView(editor);
         scroll.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
 
@@ -125,6 +126,8 @@ public class TextEditor extends JFrame{
         createWord.addActionListener(new CreateWordAction());
         createExcel.addActionListener(new CreateExcelAction());
         createCSV.addActionListener(new CreateCSVAction());
+        writeTXTFile.addActionListener(new WriteTxtAction());
+        writeWordFile.addActionListener(new WriteWordAction());
         exit.addActionListener(new ExitAction());
 
         editTXT.add(writeTXTFile);
@@ -220,9 +223,8 @@ public class TextEditor extends JFrame{
 
             try {
                 File file = new File(dialogRead.getSelectedFile().getPath());
-                FileInputStream fis = new FileInputStream(file.getAbsoluteFile());
 
-                XWPFDocument document = new XWPFDocument(fis);
+                XWPFDocument document = new XWPFDocument(new FileInputStream(file));
                 List<XWPFParagraph> paragraphs = document.getParagraphs();
 
                 document.close();
@@ -231,8 +233,6 @@ public class TextEditor extends JFrame{
                     text += wrap + para.getText();
                     wrap = "\n";
                 }
-
-                fis.close();
 
             } catch (NullPointerException | IOException e1) {
                 e1.printStackTrace();
@@ -358,6 +358,60 @@ public class TextEditor extends JFrame{
                     file = new File(dialogWrite.getSelectedFile().getPath() + ".csv");
                 }
                 file.createNewFile();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+
+        }
+
+    }
+
+    private class WriteTxtAction implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Text File(.txt)", "txt");
+            dialogRead.resetChoosableFileFilters();
+            dialogRead.setFileFilter(filter);
+            dialogRead.showOpenDialog(container);
+
+            try {
+                BufferedWriter fileout = new BufferedWriter(new FileWriter(dialogRead.getSelectedFile().getPath()));
+                editor.write(fileout);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+
+        }
+
+    }
+
+    private class WriteWordAction implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Microsoft Word(.doc, .docx)", "docx", "doc");
+            dialogRead.resetChoosableFileFilters();
+            dialogRead.setFileFilter(filter);
+            dialogRead.showOpenDialog(container);
+
+            try {
+                System.out.println(dialogRead.getSelectedFile().getPath());
+                File file = new File(dialogRead.getSelectedFile().getPath());
+                XWPFDocument document = new XWPFDocument();
+
+                String[] text = editor.getText().split("\n");
+                for (String string : text) {
+                    XWPFParagraph para = document.createParagraph();
+                    XWPFRun run = para.createRun();
+                    run.setText(string);
+                }
+                FileOutputStream out = new FileOutputStream(file);
+                document.write(out);
+                out.close();
+                document.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
