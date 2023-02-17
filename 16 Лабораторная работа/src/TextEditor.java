@@ -132,6 +132,10 @@ public class TextEditor extends JFrame{
         writeCSVFile.addActionListener(new WriteCSVAction());
         addTXTFile.addActionListener(new AddTxtAction());
         addWordFile.addActionListener(new AddWordAction());
+        addExcelFile.addActionListener(new AddExcelAction());
+        addCSVFile.addActionListener(new AddCSVAction());
+        viewReports.addActionListener(new ViewReportsAction());
+        admin.addActionListener(new AdminAction());
         exit.addActionListener(new ExitAction());
 
         editTXT.add(writeTXTFile);
@@ -509,6 +513,50 @@ public class TextEditor extends JFrame{
             } catch (NullPointerException | IOException e1) {
                 e1.printStackTrace();
             }
+
+        }
+
+    }
+
+    private class AddExcelAction implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            
+            editor.setText("Данная функция находиться в разработке");
+
+        }
+
+    }
+
+    private class AddCSVAction implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            
+            editor.setText("Данная функция находиться в разработке");
+
+        }
+
+    }
+
+    private class ViewReportsAction implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            
+            editor.setText("Данная функция находиться в разработке");
+
+        }
+
+    }
+
+    private class AdminAction implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            
+            editor.setText("Данная функция находиться в разработке");
 
         }
 
