@@ -128,6 +128,10 @@ public class TextEditor extends JFrame{
         createCSV.addActionListener(new CreateCSVAction());
         writeTXTFile.addActionListener(new WriteTxtAction());
         writeWordFile.addActionListener(new WriteWordAction());
+        writeExcelFile.addActionListener(new WriteExcelAction());
+        writeCSVFile.addActionListener(new WriteCSVAction());
+        addTXTFile.addActionListener(new AddTxtAction());
+        addWordFile.addActionListener(new AddWordAction());
         exit.addActionListener(new ExitAction());
 
         editTXT.add(writeTXTFile);
@@ -398,21 +402,111 @@ public class TextEditor extends JFrame{
             dialogRead.showOpenDialog(container);
 
             try {
-                System.out.println(dialogRead.getSelectedFile().getPath());
                 File file = new File(dialogRead.getSelectedFile().getPath());
                 XWPFDocument document = new XWPFDocument();
-
                 String[] text = editor.getText().split("\n");
+                
                 for (String string : text) {
                     XWPFParagraph para = document.createParagraph();
                     XWPFRun run = para.createRun();
                     run.setText(string);
                 }
+
                 FileOutputStream out = new FileOutputStream(file);
                 document.write(out);
                 out.close();
                 document.close();
             } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+
+        }
+
+    }
+
+    private class WriteExcelAction implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            
+            editor.setText("Данная функция находиться в разработке");
+
+        }
+
+    }
+
+    private class WriteCSVAction implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            
+            editor.setText("Данная функция находиться в разработке");
+
+        }
+
+    }
+
+    private class AddTxtAction implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Text File(.txt)", "txt");
+            dialogRead.resetChoosableFileFilters();
+            dialogRead.setFileFilter(filter);
+            dialogRead.showOpenDialog(container);
+
+            String text = "";
+            String wrap = "";
+
+            try {
+                File file = new File(dialogRead.getSelectedFile().getPath());
+                Scanner sc = new Scanner(file);
+                while (sc.hasNextLine()){
+                    text += wrap + sc.nextLine();
+                    wrap = "\n";
+                }
+                sc.close();
+                text += "\n" + editor.getText();
+                BufferedWriter fileout = new BufferedWriter(new FileWriter(file));
+                fileout.write(text);
+                fileout.close();
+            } catch (NullPointerException | IOException e1) {
+                e1.printStackTrace();
+            }
+
+        }
+
+    }
+
+    private class AddWordAction implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Microsoft Word(.doc, .docx)", "docx", "doc");
+            dialogRead.resetChoosableFileFilters();
+            dialogRead.setFileFilter(filter);
+            dialogRead.showOpenDialog(container);
+
+            try {
+                File file = new File(dialogRead.getSelectedFile().getPath());
+                String[] text = editor.getText().split("\n");
+
+                XWPFDocument document = new XWPFDocument(new FileInputStream(file));
+                
+                for (String string : text) {
+                    XWPFParagraph para = document.createParagraph();
+                    XWPFRun run = para.createRun();
+                    run.setText(string);
+                }
+
+                FileOutputStream out = new FileOutputStream(file);
+                document.write(out);
+                out.close();
+                document.close();
+
+            } catch (NullPointerException | IOException e1) {
                 e1.printStackTrace();
             }
 
