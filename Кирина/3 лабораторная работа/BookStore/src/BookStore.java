@@ -17,10 +17,11 @@ public class BookStore {
                     y = false;
                     break;
                 case 1:
+                    scan.nextLine();
                     System.out.print("Введите название книги: ");
-                    String name = scan.next();
+                    String name = scan.nextLine();
                     System.out.print("Введите автора: ");
-                    String author = scan.next();
+                    String author = scan.nextLine();
                     System.out.print("Год издания: ");
                     int year = scan.nextInt();
                     System.out.print("Цена: ");
